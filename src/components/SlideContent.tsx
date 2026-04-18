@@ -97,6 +97,7 @@ export const SlideContent: React.FC<Props> = ({ markdown, fontFamily, codeHighli
                   display: "flex",
                   flexWrap: "wrap",
                   alignItems: "center",
+                  justifyContent: "center",
                   gap: 16,
                 }}
               >
@@ -147,7 +148,7 @@ export const SlideContent: React.FC<Props> = ({ markdown, fontFamily, codeHighli
                 alt={alt ?? ""}
                 style={{
                   maxWidth: "100%",
-                  maxHeight: 500,
+                  maxHeight: 760,
                   objectFit: "contain",
                   borderRadius: 12,
                 }}
