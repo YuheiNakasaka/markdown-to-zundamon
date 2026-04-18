@@ -30,6 +30,47 @@ npm run preprocess -- projects/chapter1.md
 npm run render -- chapter1
 ```
 
+## PDFからの動画生成
+
+PDF形式のスライド資料を元に動画を作成できます。PDFの各ページを画像に変換し、1ページ=1スライドのmanuscript Markdownを自動生成します。
+
+### 前提条件
+
+- Ghostscript (`gs`) がインストールされていること（`brew install ghostscript`）
+
+### 手順
+
+```bash
+# 1. PDFからmanuscript + ページ画像を生成
+npm run pdf-to-manuscript -- ./public/software_engineering_01.pdf
+#    → manuscripts/software_engineering_01.md
+#    → manuscripts/software_engineering_01/images/page-001.png, page-002.png, ...
+
+# 2. 生成されたMarkdownを編集し、各ページのトークスクリプトを記入
+#    「ここにページNのトークスクリプトを書くのだ」の部分を書き換える
+
+# 3. 通常の動画生成パイプラインを実行
+npm run preprocess -- manuscripts/software_engineering_01.md
+npm run studio -- software_engineering_01
+npm run render -- software_engineering_01
+```
+
+生成されるMarkdownの構造:
+
+```markdown
+# ページ1
+
+> ![](./software_engineering_01/images/page-001.png)
+
+ここにページ1のトークスクリプトを書くのだ
+
+# ページ2
+
+> ![](./software_engineering_01/images/page-002.png)
+
+ここにページ2のトークスクリプトを書くのだ
+```
+
 ## アーキテクチャ
 
 2フェーズ構成:
@@ -42,6 +83,7 @@ npm run render -- chapter1
 ## ファイル構成
 
 - `scripts/preprocess.ts` - 前処理スクリプト
+- `scripts/pdf-to-manuscript.ts` - PDF → manuscript変換スクリプト
 - `scripts/studio.ts` - Remotion Studio 起動ヘルパースクリプト
 - `scripts/render.ts` - レンダリングヘルパースクリプト
 - `src/index.ts` - Remotion registerRoot

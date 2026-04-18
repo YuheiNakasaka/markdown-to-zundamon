@@ -6,6 +6,7 @@
     "preprocess": "npx ts-node scripts/preprocess.ts",
     "studio": "npx ts-node scripts/studio.ts",
     "render": "npx ts-node scripts/render.ts",
+    "pdf-to-manuscript": "npx ts-node scripts/pdf-to-manuscript.ts",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [],

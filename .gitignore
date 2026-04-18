@@ -4,3 +4,4 @@ out/
 public/
 characters/*
 !characters/README.md
+manuscripts/*/images/

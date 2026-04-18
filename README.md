@@ -159,6 +159,56 @@ characters:
 
 `preprocess`時に BGM ファイルが `public/projects/<プロジェクト名>/bgm/` に自動コピーされ、動画全体でループ再生されます。対応形式は mp3, wav, ogg など（HTML5 Audio がサポートするもの）。
 
+## PDFからの動画生成
+
+PDF形式のスライド資料を元に動画を作成できます。PDFの各ページを画像に変換し、1ページ=1スライドのmanuscript Markdownを自動生成します。
+
+### 追加の前提条件
+
+- Ghostscript (`gs`) がインストールされていること（`brew install ghostscript`）
+
+### 手順
+
+```bash
+# 1. PDFからmanuscript + ページ画像を生成
+npm run pdf-to-manuscript -- ./slides/my-presentation.pdf
+#    → manuscripts/my-presentation.md
+#    → manuscripts/my-presentation/images/page-001.png, page-002.png, ...
+
+# 2. 生成されたMarkdownを編集し、各ページのトークスクリプトを記入
+#    「ここにページNのトークスクリプトを書くのだ」の部分を書き換える
+
+# 3. 通常の動画生成パイプラインを実行
+npm run preprocess -- manuscripts/my-presentation.md
+npm run studio -- my-presentation
+npm run render -- my-presentation
+```
+
+生成されるMarkdownの構造:
+
+```markdown
+---
+fps: 30
+width: 1920
+height: 1080
+characters:
+  - name: ずんだもん
+    speakerId: 3
+---
+
+# ページ1
+
+> ![](./my-presentation/images/page-001.png)
+
+ここにページ1のトークスクリプトを書くのだ
+
+# ページ2
+
+> ![](./my-presentation/images/page-002.png)
+
+ここにページ2のトークスクリプトを書くのだ
+```
+
 ## Markdown の書き方
 
 ### セリフ
@@ -216,9 +266,10 @@ characters:
 
 ```
 ├── scripts/
-│   ├── preprocess.ts    # 前処理（Markdown解析 + VOICEVOX音声生成）
-│   ├── studio.ts        # Remotion Studio 起動
-│   └── render.ts        # レンダリング
+│   ├── preprocess.ts        # 前処理（Markdown解析 + VOICEVOX音声生成）
+│   ├── pdf-to-manuscript.ts # PDF → manuscript変換
+│   ├── studio.ts            # Remotion Studio 起動
+│   └── render.ts            # レンダリング
 ├── src/
 │   ├── index.ts         # Remotion registerRoot
 │   ├── Root.tsx          # Composition 登録
